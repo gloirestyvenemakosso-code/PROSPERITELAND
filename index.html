@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Famille Joseph</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="Style.css">
+  <link rel="shortcut icon" href="file_0000000072d071f4b5279eeeffde3b13.jpg" type="image/x-jpg">
+  <!-- PeerJS CDN — handles WebRTC signaling via public server -->
+  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+  
+</head>
+<body>
+<!-- MIC MODAL -->
+<div class="modal hidden" id="mic-modal">
+  <div class="modal-box">
+    <div class="modal-icon">🎙️</div>
+    <div class="modal-title">Accès Microphone</div>
+    <p class="modal-text">Famille Joseph a besoin de votre microphone pour l'appel audio. Cliquez ci-dessous puis autorisez dans la popup de votre navigateur.</p>
+    <button class="btn btn-gold btn-lg" onclick="requestMicAccess()">🎙️ Autoriser le microphone</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div>
+    <div class="nav-logo">FAMILLE JOSEPH</div>
+    <div class="nav-sub">La Prosperité nous accompagne</div>
+  </div>
+  <div class="nav-links">
+    <a href="#features">Fonctionnalités</a>
+    <a href="#app">Appel Audio</a>
+  </div>
+  <button class="btn btn-gold" onclick="document.getElementById('app').scrollIntoView({behavior:'smooth'})">Rejoindre →</button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-eyebrow">Impact Centre Chrétien — Brazzaville</p>
+  <div style="position:relative;margin-bottom:1.5rem;">
+    <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:.15;pointer-events:none" viewBox="0 0 800 180">
+      <path d="M0 150 Q400 50 800 150" fill="none" stroke="#F5C518" stroke-width="1"/>
+      <path d="M0 170 Q400 70 800 170" fill="none" stroke="#F5C518" stroke-width=".5"/>
+      <line x1="240" y1="0" x2="240" y2="180" stroke="#F5C518" stroke-width=".5"/>
+      <line x1="400" y1="0" x2="400" y2="180" stroke="#F5C518" stroke-width=".5"/>
+      <line x1="560" y1="0" x2="560" y2="180" stroke="#F5C518" stroke-width=".5"/>
+      <circle cx="240" cy="110" r="65" fill="none" stroke="#F5C518" stroke-width=".5"/>
+    </svg>
+    <div class="logo-joseph"><img class="logom" src="file_00000000a4e871f4888734734ed2f542.png" alt=""></div>
+  </div>
+  <p class="hero-tagline">Nous sommes des <em>visionnaires</em>, porteurs de provision et de sagesse,appelés à impacter notre génération par la <em>destinée divine</em>.</p>
+  <div class="hero-cta">
+    <button class="btn btn-gold btn-lg" onclick="goToApp('create')">🎙️ Créer un appel</button>
+    <button class="btn btn-outline btn-lg" onclick="goToApp('join')">🔗 Rejoindre un appel</button>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-header">
+    <p class="section-eyebrow">Pourquoi Famille Joseph.com</p>
+    <h2 class="section-title">Génèse 39:2/<span>3 Jean 1 : 2</span></h2>
+  </div>
+  <div class="features-grid">
+    <div class="feat-card"><div class="feat-icon">♾️</div><div class="feat-title">Illimité</div><p class="feat-desc">Aucune limite de participants — 50, 100, 200 membres dans un seul appel.</p></div>
+    <div class="feat-card"><div class="feat-icon">🌍</div><div class="feat-title">Partout</div><p class="feat-desc">Depuis Brazzaville, Paris, Kinshasa ou New York — un seul code suffit.</p></div>
+    <div class="feat-card"><div class="feat-icon">🔒</div><div class="feat-title">Privé</div><p class="feat-desc">Chaque réunion est protégée par un code unique. Seuls les invités accèdent.</p></div>
+    <div class="feat-card"><div class="feat-icon">📤</div><div class="feat-title">Partage Facile</div><p class="feat-desc">Partagez le lien directement sur WhatsApp ou Facebook en 1 clic.</p></div>
+    <div class="feat-card"><div class="feat-icon">💬</div><div class="feat-title">Chat Live</div><p class="feat-desc">Envoyez des messages pendant l'appel sans interrompre les autres.</p></div>
+    <div class="feat-card"><div class="feat-icon">📱</div><div class="feat-title">Tout Appareil</div><p class="feat-desc">Téléphone, tablette, ordinateur — aucune installation requise.</p></div>
+  </div>
+</section>
+
+<!-- APP -->
+<section id="app">
+  <div class="section-header">
+    <p class="section-eyebrow">Application</p>
+    <h2 class="section-title">Salle d'Appel <span>Audio</span></h2>
+  </div>
+
+  <div class="app-wrapper">
+    <!-- Header -->
+    <div class="app-header">
+      <div class="app-header-title">FAMILLE JOSEPH</div>
+      <span class="badge badge-connecting hidden" id="badge-connecting">
+        ⏳ Connexion...
+      </span>
+      <span class="badge badge-live hidden" id="badge-live">
+        <span class="live-dot"></span> EN DIRECT
+      </span>
+      <span id="hdr-pcount" style="margin-left:auto;font-size:.8rem;color:var(--muted);display:none">
+        <span id="hdr-num">0</span> participant(s)
+      </span>
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar" id="status-bar">
+      <div class="status-dot" id="status-dot"></div>
+      <span id="status-text">Entrez vos informations pour commencer</span>
+    </div>
+
+    <!-- ① NAME PANEL -->
+    <div class="panel active" id="panel-name">
+      <h2>✝ Bienvenue</h2>
+      <p>Entrez votre nom pour participer aux réunions Famille Joseph</p>
+      <div class="form-group" style="max-width:340px;margin:0 auto;">
+        <label>Prénom & Nom</label>
+        <input type="text" id="inp-name" placeholder="Ex: Leroy MOUSSAMA" maxlength="30"
+          onkeydown="if(event.key==='Enter')saveName()"/>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-gold btn-lg" onclick="saveName()">Continuer →</button>
+      </div>
+    </div>
+
+    <!-- ② LOBBY PANEL -->
+    <div class="panel" id="panel-lobby">
+      <h2>Bonjour <span id="greet-name" style="color:var(--white)"></span> 👋</h2>
+      <p>Créez un nouvel appel ou rejoignez une réunion existante</p>
+      <div class="lobby-choices">
+        <div class="choice-card" onclick="createRoom()">
+          <div class="choice-icon">🎙️</div>
+          <div class="choice-title">Créer un Appel</div>
+          <p class="choice-desc">Démarrez une réunion et invitez les membres</p>
+        </div>
+        <div class="choice-card" onclick="showJoinPanel()">
+          <div class="choice-icon">🔗</div>
+          <div class="choice-title">Rejoindre</div>
+          <p class="choice-desc">Entrez un code de réunion reçu</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ JOIN PANEL -->
+    <div class="panel" id="panel-join">
+      <h2>Rejoindre une Réunion</h2>
+      <p>Entrez le code de réunion reçu par WhatsApp ou Facebook</p>
+      <div class="code-input-wrap">
+        <input type="text" id="inp-code" placeholder="EX: AB12CD" maxlength="6"
+          onkeydown="if(event.key==='Enter')joinRoom()" oninput="this.value=this.value.toUpperCase()"/>
+        <button class="btn btn-gold btn-lg" onclick="joinRoom()">Rejoindre 🎙️</button>
+      </div>
+      <div style="margin-top:1.5rem;">
+        <button class="btn btn-outline btn-sm" onclick="showPanel('panel-lobby')">← Retour</button>
+      </div>
+    </div>
+
+    <!-- ④ ROOM PANEL -->
+    <div id="room-panel">
+      <div class="room-body">
+        <!-- PARTICIPANTS -->
+        <div class="room-main">
+          <h3>Participants (<span id="part-count">0</span>)</h3>
+          <div id="participants-grid"></div>
+        </div>
+        <!-- SIDEBAR -->
+        <div class="room-sidebar">
+          <!-- Code -->
+          <div class="sidebar-sec">
+            <h4>Code de Réunion</h4>
+            <div class="code-box">
+              <div class="code-big" id="room-code-display">------</div>
+              <div class="code-label">Partagez pour inviter</div>
+              <div class="share-btns">
+                <button class="share-btn share-whatsapp" onclick="shareWhatsApp()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                  WhatsApp
+                </button>
+                <button class="share-btn share-facebook" onclick="shareFacebook()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                  Facebook
+                </button>
+                <button class="share-btn share-copy" onclick="copyLink()">
+                  📋 Copier
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Info -->
+          <div class="sidebar-sec">
+            <h4>Infos</h4>
+            <div class="info-card">
+              <div class="info-row"><span class="lbl">Durée</span><span class="val gold" id="call-dur">00:00</span></div>
+              <div class="info-row"><span class="lbl">Membres</span><span class="val" id="info-pcount">1</span></div>
+              <div class="info-row"><span class="lbl">Statut</span><span class="val" style="color:var(--success)">🟢 En direct</span></div>
+            </div>
+          </div>
+          <!-- Chat -->
+          <div class="sidebar-sec">
+            <h4>Messages</h4>
+            <div class="chat-box">
+              <div id="chat-msgs"></div>
+              <div class="chat-row">
+                <input type="text" id="chat-inp" placeholder="Votre message..." maxlength="200"
+                  onkeydown="if(event.key==='Enter')sendChat()"/>
+                <button class="chat-send" onclick="sendChat()">➤</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- CONTROLS -->
+      <div class="ctrl-bar">
+        <div class="cbtn" id="cbtn-mute" onclick="toggleMute()">
+          <span class="ci" id="ci-mute">🎙️</span>
+          <span class="cl" id="cl-mute">Couper micro</span>
+        </div>
+        <div class="cbtn" id="cbtn-spk" onclick="toggleSpeaker()">
+          <span class="ci">🔊</span>
+          <span class="cl">Haut-parleur</span>
+        </div>
+        <div class="cbtn" id="cbtn-hand" onclick="raiseHand()">
+          <span class="ci" id="ci-hand">✋</span>
+          <span class="cl">Lever la main</span>
+        </div>
+        <div class="cbtn" onclick="showShareSheet()">
+          <span class="ci">📤</span>
+          <span class="cl">Inviter</span>
+        </div>
+        <div class="cbtn end" onclick="leaveRoom()">
+          <span class="ci">📵</span>
+          <span class="cl">Quitter</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SHARE MODAL -->
+<div class="modal hidden" id="share-modal">
+  <div class="modal-box">
+    <div class="modal-icon">📤</div>
+    <div class="modal-title">Inviter des Membres</div>
+    <p class="modal-text">Partagez ce lien ou ce code pour inviter les membres Famille Joseph à rejoindre l'appel.</p>
+    <div style="background:var(--navy2);border:1.5px dashed rgba(245,197,24,.4);border-radius:10px;padding:1rem;margin-bottom:1.5rem;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:2rem;font-weight:900;color:var(--gold);letter-spacing:.2em;" id="share-code-display"></div>
+      <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem;">Code de réunion</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.5rem;">
+      <button class="btn share-whatsapp" style="width:100%;justify-content:center;padding:.85rem;font-size:.95rem;border-radius:8px;" onclick="shareWhatsApp();closeModal('share-modal')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Partager sur WhatsApp
+      </button>
+      <button class="btn share-facebook" style="width:100%;justify-content:center;padding:.85rem;font-size:.95rem;border-radius:8px;" onclick="shareFacebook();closeModal('share-modal')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Partager sur Facebook
+      </button>
+      <button class="btn share-copy" style="width:100%;justify-content:center;padding:.85rem;font-size:.95rem;border-radius:8px;border:1.5px solid rgba(245,197,24,.3);" onclick="copyLink();closeModal('share-modal')">
+        📋 Copier le lien
+      </button>
+    </div>
+    <button class="btn btn-outline btn-sm" onclick="closeModal('share-modal')">Fermer</button>
+  </div>
+</div>
+
+<footer>
+  <p><span class="gold">✝ FAMILLE JOSEPH</span> · Réunions Audio Illimitées</p>
+  <p style="margin-top:.4rem;">KABWOD_LGS@2026 | Impact Centre Chrétien — Brazzaville</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="Script.js"></script>
+</body>
+</html>
